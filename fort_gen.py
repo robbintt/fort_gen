@@ -1,5 +1,5 @@
 """
-The goal is to display data, e.g. d,i,j,u,' in an indexed format.
+The goal is to display data, e.g. d,i,j,u,` in an indexed format.
 
 The array this data is stored in can expand in both the negative
 and positive directions on the x, y, and z axis.
@@ -124,7 +124,7 @@ def room_collision_detector(coordinate, fortress_array, generated_room):
                 x_abs = x_dig+coordinate[1]
                 y_abs = y_dig+coordinate[2]
 
-                if fortress_array[z_abs][x_abs][y_abs] != "\'":
+                if fortress_array[z_abs][x_abs][y_abs] != "`":
                     return 1
     
     return 0
@@ -211,7 +211,7 @@ def next_coordinate(candidate_coordinates, fortress_array):
     """
     select the next coordinate from a list of candidate_coordinates.
 
-    rank each coordinate by the number of neighbors with ' in their space.
+    rank each coordinate by the number of neighbors with ` in their space.
     
     If the coordinate is empty, add 100.
 
@@ -247,13 +247,13 @@ def next_coordinate(candidate_coordinates, fortress_array):
                     #    pass
                     if z == 0 and x == 0 and y == 0:
                         try:
-                            if fortress_array[each[0]+z][each[1]+x][each[2]+y] == "\'":
+                            if fortress_array[each[0]+z][each[1]+x][each[2]+y] == "`":
                                 score += 100
                         except:
                             pass
                     else:
                         try:
-                            if fortress_array[each[0]+z][each[1]+x][each[2]+y] == "\'":
+                            if fortress_array[each[0]+z][each[1]+x][each[2]+y] == "`":
                                 score += 10
                         except:
                             pass

@@ -1,5 +1,5 @@
 """
-The goal is to display data, e.g. d,i,j,u,' in an indexed format.
+The goal is to display data, e.g. d,i,j,u,` in an indexed format.
 
 The array this data is stored in can expand in both the negative
 and positive directions on the x, y, and z axis.
@@ -33,7 +33,7 @@ def fortress_array_assignment(fort_depth, fort_size):
         for x in range(0,fort_size):
             y_direction = []
             for y in range(0,fort_size):
-                y_direction.append("\'")
+                y_direction.append("`")
             x_direction.append(y_direction)
         fortress_array.append( x_direction )
     
@@ -136,7 +136,7 @@ def enumerate_dig_area(fortress_array):
         for x in z:
             for y in x:
                 total_blocks += 1
-                if y == "'":
+                if y == "`":
                     empty_blocks += 1
 
     return [empty_blocks, total_blocks]
