@@ -26,14 +26,14 @@ random.seed()
 fort_depth=1
 
 # fort size is defined by one variable which determines xy array size.
-fort_size=20
+fort_size=30
 
 # determines maximum depth of recursive branching algorithm.
 # intrinsically limits the fort size to max of node_depth^node depth rooms.
-node_depth=25
+node_depth=15
 
 #percent required to be dug out
-perc_dug_out=25
+perc_dug_out=15
 
 def room_generator(coordinate, fortress_array, room_type="rect"):
     """
@@ -130,6 +130,24 @@ def room_collision_detector(coordinate, fortress_array, generated_room):
     return 0
 
 
+def transform_coordinate(x, coordinate, x_size, y_size):
+    """ 
+    Transform a coordinate on two axes given x randomly iterates through 
+    range(0,3) until a match is found.
+    """
+    if x == 0:
+        return coordinate
+    if x == 1:
+        return [coordinate[0],coordinate[1]-x_size,coordinate[2]]
+    if x == 2:
+        return [coordinate[0],coordinate[1],coordinate[2]-y_size]
+    if x == 3:
+        return [coordinate[0],coordinate[1]-x_size,coordinate[2]-y_size]
+
+    # Error case:
+    return coordinate
+
+
 def room_installer(coordinate, fortress_array, generated_room):
     """
     Defining the room geometry
@@ -153,6 +171,22 @@ def room_installer(coordinate, fortress_array, generated_room):
         #   we would try the LLQ, ULQ, and URQ.
         # This is done by moving the coordinates by the x and y length of
         #   the room.
+    rect_direction = range(0,3)
+    random.shuffle(rect_direction)
+   
+
+    # Randomly transform the room inherently.
+    for x in rect_direction:
+        test_trans_coordinate = transform_coordinate(x, coordinate, x_size, y_size)
+        if rect_collision_detector(test_trans_coordinate, fortress_array, generated_room) == 0:
+            coordinate = test_trans_coordinate
+            break
+        else:
+            pass
+        return 2  ## For loop fails to find non-colliding room.
+
+
+    """
     if rect_collision_detector(coordinate, fortress_array, generated_room) == 1:
 
         if rect_collision_detector([coordinate[0],coordinate[1]-x_size,coordinate[2]], fortress_array, generated_room) == 0:
@@ -163,6 +197,9 @@ def room_installer(coordinate, fortress_array, generated_room):
             coordinate = [coordinate[0],coordinate[1]-x_size,coordinate[2]-y_size]
         else: 
             return 2
+    """
+
+        
     # return collision with another room.
     if room_collision_detector(coordinate, fortress_array, generated_room) == 1:
         return 2
