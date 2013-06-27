@@ -135,23 +135,31 @@ def transform_coordinate(x, coordinate, x_size, y_size):
     Transform a coordinate on two axes given x randomly iterates through 
     range(0,3) until a match is found.
     """
+
+    #Catch any size < 2 transformations.
+    if x_size < 2 or y_size < 2:
+        return coordinate
+
+    # Add 1 to x_size and y_size to ensure that the originating block is still
+    # part of the transformed block.
+
     if x == 0:
         return coordinate
     if x == 1:
-        if coordinate[1]-x_size < 0:
+        if coordinate[1]-x_size+1 < 0:
             return coordinate
         else:
-            return [coordinate[0],coordinate[1]-x_size,coordinate[2]]
+            return [coordinate[0],coordinate[1]-x_size+1,coordinate[2]]
     if x == 2:
-        if coordinate[2]-y_size < 0:
+        if coordinate[2]-y_size+1 < 0:
             return coordinate
         else:
-            return [coordinate[0],coordinate[1],coordinate[2]-y_size]
+            return [coordinate[0],coordinate[1],coordinate[2]-y_size+1]
     if x == 3:
-        if coordinate[2]-y_size < 0 or coordinate[1]-x_size < 0:
+        if coordinate[2]-y_size+1 < 0 or coordinate[1]-x_size+1 < 0:
             return coordinate
         else:
-            return [coordinate[0],coordinate[1]-x_size,coordinate[2]-y_size]
+            return [coordinate[0],coordinate[1]-x_size+1,coordinate[2]-y_size+1]
 
     # Error case:
     return coordinate
