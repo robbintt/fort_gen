@@ -26,14 +26,14 @@ random.seed()
 fort_depth=1
 
 # fort size is defined by one variable which determines xy array size.
-fort_size=30
+fort_size=40
 
 # determines maximum depth of recursive branching algorithm.
 # intrinsically limits the fort size to max of node_depth^node depth rooms.
-node_depth=15
+node_depth=20
 
 #percent required to be dug out
-perc_dug_out=15
+perc_dug_out=8
 
 def room_generator(coordinate, fortress_array, room_type="rect"):
     """
@@ -336,7 +336,7 @@ def next_coordinate(candidate_coordinates, fortress_array):
     return new_random_top_coordinates ## for now
 
 
-def depth_iterator(coordinate, fortress_array, node_depth=10):
+def depth_iterator(coordinate, fortress_array, node_depth=5):
     """
     Recursively generate deeper nodes, check them for collisions, resize
     them if necessary, and write them to the fortress_array.
@@ -348,6 +348,9 @@ def depth_iterator(coordinate, fortress_array, node_depth=10):
     node_depth -= 1
     #print "Depth test:", node_depth
    
+    if random.randint(0,9) == 0:
+        depth_iterator(coordinate, fortress_array)
+
     roomtype_randomizer = random.randint(1,3)
     if roomtype_randomizer < 3:
         next_room = room_generator(coordinate, fortress_array, "doorway")
