@@ -138,11 +138,20 @@ def transform_coordinate(x, coordinate, x_size, y_size):
     if x == 0:
         return coordinate
     if x == 1:
-        return [coordinate[0],coordinate[1]-x_size,coordinate[2]]
+        if coordinate[1]-x_size < 0:
+            return coordinate
+        else:
+            return [coordinate[0],coordinate[1]-x_size,coordinate[2]]
     if x == 2:
-        return [coordinate[0],coordinate[1],coordinate[2]-y_size]
+        if coordinate[2]-y_size < 0:
+            return coordinate
+        else:
+            return [coordinate[0],coordinate[1],coordinate[2]-y_size]
     if x == 3:
-        return [coordinate[0],coordinate[1]-x_size,coordinate[2]-y_size]
+        if coordinate[2]-y_size < 0 or coordinate[1]-x_size < 0:
+            return coordinate
+        else:
+            return [coordinate[0],coordinate[1]-x_size,coordinate[2]-y_size]
 
     # Error case:
     return coordinate
