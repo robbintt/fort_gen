@@ -23,17 +23,18 @@ import barefort
 
 random.seed()
 
+# does nothing yet, do not change
 fort_depth=1
 
 # fort size is defined by one variable which determines xy array size.
-fort_size=40
+fort_size=30
 
 # determines maximum depth of recursive branching algorithm.
 # intrinsically limits the fort size to max of node_depth^node depth rooms.
 node_depth=20
 
 #percent required to be dug out
-perc_dug_out=8
+perc_dug_out=15
 
 def room_generator(coordinate, fortress_array, room_type="rect"):
     """
@@ -348,8 +349,8 @@ def depth_iterator(coordinate, fortress_array, node_depth=5):
     node_depth -= 1
     #print "Depth test:", node_depth
    
-    if random.randint(0,9) == 0:
-        depth_iterator(coordinate, fortress_array)
+    if random.randint(1,5*(node_depth+1)) == 1:
+        depth_iterator(coordinate, fortress_array, node_depth)
 
     roomtype_randomizer = random.randint(1,3)
     if roomtype_randomizer < 3:
@@ -442,6 +443,8 @@ def brute_force_selector(perc_dug_out, fort_depth, fort_size, node_depth):
 
 def fort_level_linker(multi_floor_selection):
 
+
+    print len(multi_floor_selection), "total levels."
     for z in range(len(multi_floor_selection)):
         i_coord = []
         for x in range(len(multi_floor_selection[0])):
