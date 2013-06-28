@@ -348,8 +348,10 @@ def depth_iterator(coordinate, fortress_array, node_depth=5):
         return fortress_array # stop here
     node_depth -= 1
     #print "Depth test:", node_depth
-   
-    if random.randint(1,5*(node_depth+1)) == 1:
+  
+    # This is a negative feedback loop, making a branch more probable
+    # each time the node depth goes down.
+    if random.randint(1,3*(node_depth+1)) == 1:
         depth_iterator(coordinate, fortress_array, node_depth)
 
     roomtype_randomizer = random.randint(1,3)
