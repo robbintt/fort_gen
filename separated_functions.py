@@ -38,8 +38,12 @@ perc_dug_out=15
 
 def room_generator(coordinate, fortress_array, room_type="rect"):
     """
-    use an algorithm to select a function, potentially randomization
-    default to rect for now
+    Return a generated room according to the parameters passed in the function.
+
+    This function is currently just routing through other functions but
+    eventually could partially or completely determine what room is generated 
+    based on the information passed to it.
+    
     """
 
     # the generated room should be a list of list of lists
@@ -66,7 +70,11 @@ def perimeter_define():
 def rect_collision_detector(coordinate, fortress_array, generated_room):
     """
     This takes a generated_room and a coordinate, and detects if it will 
-    collide with the edge of the fortress_array
+    collide with the edge of the fortress_array.
+
+    If a collision is detected, the function returns 1.
+
+    If no collision is detected, the functionm returns 0.
     """
     
     # This represents the size of the room on all three (z,x,y) axes
@@ -106,7 +114,7 @@ def rect_collision_detector(coordinate, fortress_array, generated_room):
 
 def room_collision_detector(coordinate, fortress_array, generated_room):
     """ detect collision with any other "d" on the fortress_array
-     if colission is found, set a new coordinate according to the symmetry
+     if collision is found, set a new coordinate according to the symmetry
      parameters of the room size.  If a collision remains, try transposing
      the room. If this doesn't do enough, abort the node. """
     
@@ -170,6 +178,12 @@ def room_installer(coordinate, fortress_array, generated_room):
     """
     Defining the room geometry
     Each point in generated_room must be transcribed to fortress_array
+    
+    This function handles part of transforming a room to fit it, which should
+    be handled totally elsewhere in a 'room transpose' function.
+    
+    Next coordinate is called within this function right now, which is bad
+    control flow. It should be called next at a higher level.
     """
     
     # This represents the size of the room on all three (z,x,y) axes
@@ -193,7 +207,8 @@ def room_installer(coordinate, fortress_array, generated_room):
     random.shuffle(rect_direction)
    
 
-    # Randomly transform the room inherently.
+    # Transform the room on the xy-plane (len(x) swaps with len(y)
+    # and check to see that the transformed room doesn't collide.
     for x in rect_direction:
         test_trans_coordinate = transform_coordinate(x, coordinate, x_size, y_size)
         if rect_collision_detector(test_trans_coordinate, fortress_array, generated_room) == 0:
@@ -250,14 +265,12 @@ def room_installer(coordinate, fortress_array, generated_room):
 
 def next_coordinate(candidate_coordinates, fortress_array):
     """
-    select the next coordinate from a list of candidate_coordinates.
+    Select the next coordinate from a list of candidate_coordinates.
 
-    rank each coordinate by the number of neighbors with ` in their space.
-    
-    If the coordinate is empty, add 100.
+    Candidate_coordinates should probably be generated in this function or
+    at the minimum should be brought to a bit lower depth.
 
-    For each cardinal or diagonal neighbor empty, add 10.
-        
+    Rank each coordinate by the number of neighbors with ` in their space.
     The highest rank wins.
     """
 
@@ -279,13 +292,6 @@ def next_coordinate(candidate_coordinates, fortress_array):
                     if each[2]+y < 0:
                         break
 
-
-                    #try:
-                    #    print "[z,x,y]", z,x,y
-                    #    print "Current exact location:", each[0]+z,each[1]+x,each[2]+y
-                    #    print "Current check is:", fortress_array[each[0]+z][each[1]+x][each[2]+y]
-                    #except:
-                    #    pass
                     if z == 0 and x == 0 and y == 0:
                         try:
                             if fortress_array[each[0]+z][each[1]+x][each[2]+y] == "`":
@@ -299,7 +305,6 @@ def next_coordinate(candidate_coordinates, fortress_array):
                         except:
                             pass
 
-        
         each_and_score = [each, score]
         coord_score_pair.append(each_and_score)
     
@@ -327,15 +332,18 @@ def depth_iterator(coordinate, fortress_array, node_depth=5):
     """
     Recursively generate deeper nodes, check them for collisions, resize
     them if necessary, and write them to the fortress_array.
-
-
+    
+    This is the control point for the recursive/interative process that
+    drives systematic room generation. A lot of the control flow needs to be
+    moved into this function from other functions.
     """
+    
     if node_depth <= 0:
         return fortress_array # stop here
     node_depth -= 1
     #print "Depth test:", node_depth
   
-    # This is a negative feedback loop, making a branch more probable
+    # This is a negative feedback loop, making a branch less probable
     # each time the node depth goes down.
     if random.randint(1,3*(node_depth+1)) == 1:
         depth_iterator(coordinate, fortress_array, node_depth)
@@ -362,8 +370,6 @@ def depth_iterator(coordinate, fortress_array, node_depth=5):
     fortress_array = test_array[0]
     next_coordinates = test_array[1]
 
-    # Recurse on the new results!
-    # But how will I track what kind of room to do next?
     depth_iterator(next_coordinates, fortress_array, node_depth)
 
     return [fortress_array, next_coordinates]

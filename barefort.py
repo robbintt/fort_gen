@@ -1,18 +1,16 @@
 """
-The goal is to display data, e.g. d,i,j,u,` in an indexed format.
 
-The array this data is stored in can expand in both the negative
-and positive directions on the x, y, and z axis.
+These functions need reorganized.
 
-There is no disadvantage each room node onto a table, and then when
-generating the next node, check for collisions.
 
-Process:
-    Generate next node type
-    Determine starting point in the array
-    Assess overlap with any previously written node.
-    In order to do this, all nodes should be buffered by
-    the tilde character that means 'do nothing' for quickfort
+Function descriptions for this file:
+    Generate an empty fortress array.
+    Generate a random starting coordinate on that fortress array.
+    Generate a doorway or a rectangular room.
+    Transpose a room.
+    Print a room on the console.
+    Count the percentage a total room that will be filled e.g. 20/(20*20)=5%
+
 
 """
 import sys
